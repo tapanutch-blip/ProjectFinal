@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Employee Salary Form</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<script>
+if(!localStorage.getItem("user_id")){
+    window.location.href = "signin.html";
+}
+</script>
+
+<div class="page active">
+<div class="card">
+<h2 class="card-title">Employee Salary Form</h2>
+
+<div class="field">
+<label>Firstname</label>
+<input type="text" id="firstname">
+</div>
+
+<div class="field">
+<label>Lastname</label>
+<input type="text" id="lastname">
+</div>
+
+<div class="field">
+<label>Department</label>
+<select id="dept" onchange="setSalaryByDept()">
+<option value="">เลือกแผนก</option>
+<option value="HR">HR</option>
+<option value="IT">IT</option>
+<option value="Sale">Sale</option>
+<option value="Marketing">Marketing</option>
+</select>
+</div>
+
+<div class="field">
+<label>เงินเดือนพื้นฐาน</label>
+<input type="text" id="salary" readonly>
+</div>
+
+<div class="field">
+<label>Work Date</label>
+<input type="date" id="workdate">
+</div>
+
+<div class="field">
+<label>Check-In</label>
+<input type="time" id="checkin">
+</div>
+
+<div class="field">
+<label>Check-Out</label>
+<input type="time" id="checkout">
+</div>
+
+<button class="btn" onclick="doSalarySubmit()">Submit</button>
+
+</div>
+</div>
+
+<!-- โหลด library ก่อน -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="js/script.js"></script>
+
+<script>
+window.onload = () => {
+const firstname = localStorage.getItem('firstname');
+const lastname = localStorage.getItem('lastname');
+
+if (!firstname) {
+window.location.href = '/signin.html';
+return;
+}
+
+document.getElementById('firstname').value = firstname;
+document.getElementById('lastname').value = lastname;
+};
+</script>
+
+</body>
+</html>

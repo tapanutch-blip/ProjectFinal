@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0ede8;
+    background-image: radial-gradient(circle, #c9c5be 1px, transparent 1px);
+    background-size: 28px 28px;
+    min-height: 100vh;
+}
+
+.page {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: #f0ede8;
+}
+
+.page.active {
+    display: flex;
+}
+
+.card {
+    background: #e8e4de;
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 480px;
+    border: 1px solid #ccc9c3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #8a8680;
+    margin-bottom: -4px;
+}
+
+input, select {
+    width: 100%;
+    background: #faf9f7;
+    border: 1px solid #ccc9c3;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #2d2d2d;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: #b5a98a;
+    box-shadow: 0 0 0 3px rgba(181,169,138,0.18);
+}
+
+input[readonly] {
+    background: #f0ede8;
+    color: #8a8680;
+}
+
+button {
+    width: 100%;
+    padding: 13px;
+    background: #2d2d2d;
+    color: #faf9f7;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: background 0.2s, transform 0.1s;
+}
+
+button:hover { background: #444; }
+button:active { transform: scale(0.98); }
+
+.alert {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    min-height: 16px;
+}
+
+.alert.error {
+    background: #fde8e6;
+    color: #c0392b;
+    border: 1px solid #f5c6c2;
+}
+
+.alert.success {
+    background: #e6f7ed;
+    color: #27ae60;
+    border: 1px solid #b8e8ca;
+}
+
+.link-row {
+    text-align: center;
+    font-size: 13px;
+    color: #8a8680;
+}
+
+.link-row a {
+    color: #1a1a1a;
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc9c3;
+    margin: 8px 0;
+}
+.monthly-wrapper {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-monthly {
+  width: auto; /* ✅ แก้จาก 100% */
+  padding: 10px 24px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-monthly:hover {
+  background: #45a049;
+}

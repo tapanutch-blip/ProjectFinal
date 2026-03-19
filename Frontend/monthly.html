@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>รายงานรายเดือน</title>
+<style>
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #999; padding: 6px; text-align: center; }
+tfoot td { font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h2 style="text-align:center;">รายงานเงินเดือนรายเดือน</h2>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <input type="month" id="monthPicker">
+  <button onclick="loadReport()">โหลดข้อมูล</button>
+</div>
+
+<table border="1" width="100%" cellpadding="8">
+  <thead>
+    <tr>
+      <th>วันที่</th>
+      <th>CheckIn</th>
+      <th>CheckOut</th>
+      <th>OT (ชม.)</th>
+      <th>เงิน (บาท)</th>
+    </tr>
+  </thead>
+  <tbody id="reportTable"></tbody>
+</table>
+
+<h3 id="summary" style="text-align:right; margin-top:10px;"></h3>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>

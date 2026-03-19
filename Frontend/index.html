@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Employee System</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="page-signin" class="page active">
+<div class="card">
+<h2>Sign In</h2>
+
+<input type="text" id="si-user" placeholder="Username">
+<input type="password" id="si-pass" placeholder="Password">
+
+<button onclick="doSignIn()">Login</button>
+
+<p class="alert" id="signin-alert"></p>
+</div>
+</div>
+
+
+<!-- SALARY FORM -->
+<div id="page-salary" class="page">
+<div class="card">
+
+<h2>Employee Salary Form</h2>
+
+<label>Firstname</label>
+<input type="text" id="firstname">
+
+<label>Lastname</label>
+<input type="text" id="lastname">
+
+<label>Department</label>
+<select id="dept" onchange="setSalaryByDept()">
+<option value="">เลือกแผนก</option>
+<option value="HR">HR</option>
+<option value="IT">IT</option>
+<option value="Sale">Sale</option>
+<option value="Marketing">Marketing</option>
+</select>
+
+<label>เงินเดือนพื้นฐาน</label>
+<input type="text" id="salary" readonly>
+
+<label>Work Date</label>
+<input type="date" id="workdate">
+
+<label>Check-In</label>
+<input type="time" id="checkin">
+
+<label>Check-Out</label>
+<input type="time" id="checkout">
+
+<button onclick="doSalarySubmit()">Submit</button>
+
+<p class="alert" id="salary-alert"></p>
+
+</div>
+</div>
+
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+<div class="card">
+
+<h2>Employee Dashboard</h2>
+
+<p>ชื่อ: <span id="info-fullname"></span></p>
+<p>แผนก: <span id="info-dept"></span></p>
+<p>วันที่: <span id="info-date"></span></p>
+
+<hr>
+
+<p>Check-In: <span id="info-checkin"></span></p>
+<p>Check-Out: <span id="info-checkout"></span></p>
+
+<p>เวลาทำงาน: <span id="info-hours"></span></p>
+<p>OT: <span id="info-ot"></span></p>
+<p>เงินเดือนรวม: <span id="info-salary"></span></p>
+
+<button onclick="doLogout()">Logout</button>
+
+</div>
+
+<!-- วงกลมรูปโปรไฟล์ -->
+<div style="text-align:center; margin-bottom:10px;">
+  <input type="file" id="uploadImg" accept="image/*" style="display:none" 
+         onchange="previewImage(this)">
+  
+  <img id="profileImg" 
+       src="https://ui-avatars.com/api/?name=User&background=cccccc&color=ffffff&size=80"
+       onclick="document.getElementById('uploadImg').click()"
+       title="คลิกเพื่อเปลี่ยนรูป"
+       style="width:80px; height:80px; border-radius:50%; object-fit:cover; 
+              cursor:pointer; border:2px solid #aaa;">
+  
+  <p style="font-size:11px; color:#888; margin:4px 0;">คลิกที่รูปเพื่อเปลี่ยน</p>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="js/script.js"></script>
+
+</body>
+</html>
