@@ -7,7 +7,7 @@ router.get('/', employeeController.getAll);
 router.get('/monthly/:userId/:month', employeeController.getMonthlyReport);
 router.get('/:id', employeeController.getById);
 router.post('/', employeeController.create);
-router.put('/', employeeController.update); // ← ต้องมี id
+router.put('/', employeeController.update); 
 router.put('/:id', employeeController.update);
 router.delete('/:id', employeeController.remove);
 

@@ -3,37 +3,233 @@
 <head>
 <meta charset="UTF-8">
 <title>รายงานรายเดือน</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #999; padding: 6px; text-align: center; }
-tfoot td { font-weight: bold; }
+  :root {
+    --bg: #8a8a8a;
+    --surface: #747373;
+    --surface2: #a6a4a4;
+    --border: #c5bebe;
+    --accent: #555453;
+    --accent2: #fcfdfd;
+    --text: #f0f0f0;
+    --muted: #fefcfc;
+    --danger: #d72323;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  .topbar-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .btn-signout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-signout:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: rgba(232,74,74,0.05);
+  }
+
+  /* MAIN */
+  .main { max-width: 960px; margin: 0 auto; padding: 48px 32px; }
+
+  .page-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 40px;
+  }
+
+  /* CONTROLS */
+  .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+
+  input[type="month"] {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    padding: 10px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="month"]:focus { border-color: var(--accent); }
+  input[type="month"]::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+
+  .btn-load {
+    padding: 10px 24px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #0f0f0f;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-load:hover {
+    background: #f0d060;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(232,200,74,0.3);
+  }
+
+  /* TABLE */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  thead th {
+    padding: 14px 20px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+  tbody td {
+    padding: 14px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    text-align: center;
+    *{color: var(--text)!important;}
+  }
+
+  /* SUMMARY */
+  #summary {
+    text-align: right;
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+  }
+  #summary strong{
+    color: var(--text)!important;
+  }
+
+  #summary strong { color: var(--accent); }
 </style>
 </head>
 <body>
 
-<h2 style="text-align:center;">รายงานเงินเดือนรายเดือน</h2>
-
-<div style="text-align:center; margin-bottom:20px;">
-  <input type="month" id="monthPicker">
-  <button onclick="loadReport()">โหลดข้อมูล</button>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo-dot"></div>
+    <span class="topbar-title">HR System</span>
+  </div>
+  <button class="btn-signout" onclick="localStorage.clear(); window.location.href='index.html'">
+    ออกจากระบบ
+  </button>
 </div>
 
-<table border="1" width="100%" cellpadding="8">
-  <thead>
-    <tr>
-      <th>วันที่</th>
-      <th>CheckIn</th>
-      <th>CheckOut</th>
-      <th>OT (ชม.)</th>
-      <th>เงิน (บาท)</th>
-    </tr>
-  </thead>
-  <tbody id="reportTable"></tbody>
-</table>
+<!-- MAIN -->
+<div class="main">
+  <div class="page-label">Reports</div>
+  <h1 class="page-title">Monthly Salary Reports</h1>
 
-<h3 id="summary" style="text-align:right; margin-top:10px;"></h3>
+  <div class="controls">
+    <input type="month" id="monthPicker">
+    <button class="btn-load" onclick="loadReport()">โหลดข้อมูล</button>
+  </div>
 
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>วันที่</th>
+          <th>CheckIn</th>
+          <th>CheckOut</th>
+          <th>OT (ชม.)</th>
+          <th>เงิน (บาท)</th>
+        </tr>
+      </thead>
+      <tbody id="reportTable"></tbody>
+    </table>
+  </div>
+
+  <h3 id="summary"></h3>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="js/script.js"></script>
+
 </body>
 </html>

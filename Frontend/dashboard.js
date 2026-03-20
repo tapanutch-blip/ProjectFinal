@@ -1,7 +1,7 @@
 const BASE_URL = "http://localhost:4000";
 
 // ===== โหลดข้อมูล Dashboard =====
-window.onload = async () => {
+window.addEventListener('load', async () => {
   const id = localStorage.getItem("lastEmployee");
   if (!id) {
     alert("ไม่พบข้อมูลพนักงาน");
@@ -19,8 +19,8 @@ window.onload = async () => {
     const dept      = data.dept      || "-";
     const checkin   = data.checkin   || "-";
     const checkout  = data.checkout  || "-";
-    const otHours   = data.ot_hours  || "-";
-    const totalPay  = data.total_pay || "-";
+    const otHours   = Number(data.ot_hours)  || 0;
+    const totalPay  = Number(data.total_pay) || 0;
     const workdate  = data.workdate
       ? new Date(data.workdate).toLocaleDateString('th-TH')
       : "-";
@@ -28,12 +28,11 @@ window.onload = async () => {
     // Main
     document.getElementById("info-fullname").innerText = fullname;
     document.getElementById("info-date").value         = workdate;
-    document.getElementById("d-checkin").value        = checkin;
-    document.getElementById("d-checkout").value       = checkout;
-    document.getElementById("d-ot").value             = otHours !== "-" ? otHours + " ชม." : "-";
-    const finalPay = parseFloat(data.total_pay) || totalPay;
-    document.getElementById('d-salary').value = Number(finalPay).toLocaleString('th-TH') + " บาท";
-    
+    document.getElementById("d-checkin").value         = checkin;
+    document.getElementById("d-checkout").value        = checkout;
+    document.getElementById("d-ot").value              = otHours.toFixed(2) + " ชม.";
+    document.getElementById("d-salary").value          = totalPay.toLocaleString('th-TH') + " บาท";
+
     // Sidebar
     document.getElementById("side-name").innerText     = fullname;
     document.getElementById("side-dept").innerText     = dept;
@@ -41,26 +40,28 @@ window.onload = async () => {
     document.getElementById("side-checkin").innerText  = checkin;
     document.getElementById("side-checkout").innerText = checkout;
 
-    // โหลดรูปโปรไฟล์จาก DB
-    const userId = localStorage.getItem('user_id');
+    // โหลดรูปโปรไฟล์
+    const userId     = localStorage.getItem('user_id');
     const profileRes = await axios.get(`${BASE_URL}/auth/profile/${userId}`);
     const profileImgEl = document.getElementById('profileImg');
-    if (profileRes.data.profile_image) {
-      profileImgEl.src = `${BASE_URL}/uploads/profile/${profileRes.data.profile_image}`;
-    } else {
-      profileImgEl.src =
-        `https://ui-avatars.com/api/?name=${firstname}+${lastname}&background=cccccc&color=ffffff&size=80`;
-    }
+    profileImgEl.src = profileRes.data.profile_image
+      ? `${BASE_URL}/uploads/profile/${profileRes.data.profile_image}`
+      : `https://ui-avatars.com/api/?name=${firstname}+${lastname}&background=cccccc&color=ffffff&size=80`;
 
   } catch (err) {
     console.error("Dashboard Error:", err);
   }
-};
+});
 
 // ===== Logout =====
 function handleLogout() {
   localStorage.clear();
   window.location.href = "signin.html";
+}
+
+// ===== Navigate =====
+function goToMonthly() {
+  window.location.href = "monthly.html";
 }
 
 // ===== PROFILE IMAGE =====
@@ -73,14 +74,12 @@ function previewImage(input) {
       return;
     }
 
-    // แสดงรูป preview บนหน้า
     const reader = new FileReader();
     reader.onload = e => {
       document.getElementById('profileImg').src = e.target.result;
     };
     reader.readAsDataURL(file);
 
-    // อัปโหลดไป backend
     uploadToServer(file);
   }
 }
@@ -102,7 +101,6 @@ function uploadToServer(file) {
   .then(res => {
     if (res.data.success) {
       alert('อัปโหลดรูปสำเร็จ!');
-      // ใช้รูปจาก DB โดยตรง
       document.getElementById('profileImg').src =
         `${BASE_URL}/uploads/profile/${res.data.filename}`;
     } else {
@@ -113,7 +111,4 @@ function uploadToServer(file) {
     console.error(err);
     alert('เกิดข้อผิดพลาดในการอัปโหลด');
   });
-function goToMonthly() {
-  window.location.href = "monthly.html";
-}
 }

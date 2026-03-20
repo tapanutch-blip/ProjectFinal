@@ -25,7 +25,7 @@ if(!localStorage.getItem("user_id")){
 
 <div class="field">
 <label>Lastname</label>
-<input type="text" id="lastname">
+<input type="text" id="lastname" >
 </div>
 
 <div class="field">
@@ -64,26 +64,18 @@ if(!localStorage.getItem("user_id")){
 </div>
 </div>
 
-<!-- โหลด library ก่อน -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="js/script.js"></script>
 
 <script>
-window.onload = () => {
-const firstname = localStorage.getItem('firstname');
-const lastname = localStorage.getItem('lastname');
+window.addEventListener('load', () => {
+    const firstname = localStorage.getItem('firstname') || '';
+    const lastname  = localStorage.getItem('lastname')  || '';
 
-if (!firstname) {
-window.location.href = '/signin.html';
-return;
-}
-
-document.getElementById('firstname').value = firstname;
-document.getElementById('lastname').value = lastname;
-};
+    document.getElementById('firstname').value = firstname;
+    document.getElementById('lastname').value  = lastname;
+});
 </script>
 
 </body>

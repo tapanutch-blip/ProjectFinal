@@ -21,7 +21,7 @@ router.get('/profile/:id', async (req, res) => {
         res.status(500).json({ profile_image: null });
     }
 });
-// ตัวอย่างใน routes/employee.js
+
 router.get('/EmployeeForm/monthly/:userId/:month', async (req, res) => {
   try {
     const { userId, month } = req.params;
@@ -58,5 +58,7 @@ router.get('/EmployeeForm/monthly/:userId/:month', async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+
 
 module.exports = router;

@@ -6,7 +6,6 @@ const db      = require('../config/db'); // ไฟล์เชื่อมต่
 
 const router = express.Router();
 
-// ตั้งค่า multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = 'uploads/profile/';
@@ -47,7 +46,6 @@ router.post('/upload-profile', upload.single('profile_image'), async (req, res) 
     const newPath     = `uploads/profile/${newFilename}`;
     fs.renameSync(oldPath, newPath); // ← เปลี่ยนชื่อไฟล์
 
-    // ลบรูปเก่า
     const [rows] = await db.query('SELECT profile_image FROM users WHERE id = ?', [userId]);
     if (rows[0]?.profile_image) {
       const oldImg = `uploads/profile/${rows[0].profile_image}`;

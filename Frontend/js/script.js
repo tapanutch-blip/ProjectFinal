@@ -1,7 +1,7 @@
 const BASE_URL = 'http://localhost:4000';
 
-// ===================== LOGIN =====================
-const doSignIn = async () => {
+//  LOGIN 
+async function doSignIn() {
     const username = document.getElementById('si-user').value.trim();
     const password = document.getElementById('si-pass').value;
 
@@ -13,9 +13,9 @@ const doSignIn = async () => {
     try {
         const res = await axios.post(`${BASE_URL}/auth/login`, { username, password });
         if (res.data.success) {
-            localStorage.setItem('user_id', res.data.user_id);
-            localStorage.setItem('firstname', res.data.firstname);
-            localStorage.setItem('lastname', res.data.lastname);
+            localStorage.setItem('user_id',   res.data.user_id);
+            localStorage.setItem('firstname', res.data.firstname); 
+            localStorage.setItem('lastname',  res.data.lastname);  
             Swal.fire({ icon: "success", title: "เข้าสู่ระบบสำเร็จ" })
                 .then(() => window.location.href = "salary.html");
         } else {
@@ -24,10 +24,9 @@ const doSignIn = async () => {
     } catch (err) {
         Swal.fire({ icon: "error", title: "Server Error", text: err.message });
     }
-};
-
-// ===================== REGISTER =====================
-const doRegister = async () => {
+}
+//  REGISTER 
+async function doRegister() {
     const firstname = document.getElementById('reg-first').value.trim();
     const lastname  = document.getElementById('reg-last').value.trim();
     const username  = document.getElementById('reg-user').value.trim();
@@ -42,26 +41,34 @@ const doRegister = async () => {
     try {
         const res = await axios.post(`${BASE_URL}/auth/register`, { firstname, lastname, username, email, password });
         if (res.data.success) {
-            localStorage.setItem('user_id', res.data.user_id);
+            console.log("Register response:", res.data);
+            localStorage.setItem('user_id',   res.data.user_id);
             localStorage.setItem('firstname', firstname);
-            localStorage.setItem('lastname', lastname);
+            localStorage.setItem('lastname',  lastname);
             Swal.fire({ icon: "success", title: "ลงทะเบียนสำเร็จ" })
                 .then(() => window.location.href = "salary.html");
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "ลงทะเบียนไม่สำเร็จ",
+                text: res.data.message || "Email หรือ Username ถูกใช้ไปแล้ว"
+            });
         }
     } catch (err) {
         Swal.fire({ icon: "error", title: "Email หรือ Username ถูกใช้ไปแล้ว", text: err.message });
     }
-};
+}
 
-// ===================== SALARY =====================
-const setSalaryByDept = () => {
+//  SALARY
+function setSalaryByDept() {
     const dept = document.getElementById('dept').value;
     const salaryMap = { HR: 19000, IT: 22000, Sale: 17000, Marketing: 15000 };
     document.getElementById('salary').value = salaryMap[dept] || '';
-};
+}
 
-const doSalarySubmit = async () => {
+async function doSalarySubmit() {
     const storedUserId = localStorage.getItem('user_id');
+    console.log("user_id:", storedUserId);
     if (!storedUserId) {
         Swal.fire({ icon: "error", title: "กรุณา Login ก่อน" });
         return;
@@ -76,7 +83,7 @@ const doSalarySubmit = async () => {
     const salary    = parseFloat(document.getElementById('salary').value);
 
     if (!firstname || !lastname || !dept || !workdate || !checkin || !checkout) {
-        Swal.fire({ icon: "error", title: "กรอกข้อมูลให้ครบถ้วน" });
+        Swal.fire({ icon: "error", title: "กรุณากรอกข้อมูลให้ครบถ้วน" });
         return;
     }
 
@@ -86,30 +93,28 @@ const doSalarySubmit = async () => {
     let otHour = checkoutHour - checkinHour - 8;
     if (otHour < 0) otHour = 0;
 
-    const otPay    = otHour * 200;
-    const totalPay = salary + otPay;
-
     try {
         const data = {
             user_id: parseInt(storedUserId),
             firstname, lastname, dept, workdate,
-            checkin, checkout
+            checkin, checkout,salary
         };
 
         const res = await axios.post(`${BASE_URL}/EmployeeForm`, data);
+         console.log("Response:", res.data); 
 
         if (res.data.id || res.data.success) {
-            localStorage.setItem('lastEmployee', res.data.id);
-            Swal.fire({ icon: "success", title: "บันทึกสำเร็จ" })
-                .then(() => window.location.href = "dashboard.html");
-        }
+    localStorage.setItem('lastEmployee', res.data.id || res.data.insertId); 
+    Swal.fire({ icon: "success", title: "บันทึกสำเร็จ" })
+        .then(() => window.location.href = "dashboard.html");
+}
     } catch (err) {
         Swal.fire({ icon: "error", title: "เกิดข้อผิดพลาด", text: err.message });
     }
-};
+}
 
 // ===================== UPLOAD PROFILE =====================
-const previewImage = (input) => {
+function previewImage(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
         if (file.size > 10 * 1024 * 1024) { alert('ไฟล์ใหญ่เกินไป! ไม่เกิน 10MB'); return; }
@@ -129,10 +134,10 @@ const previewImage = (input) => {
             .then(res => { if (!res.data.success) console.error(res.data.message); })
             .catch(err => console.error(err));
     }
-};
+}
 
 // ===================== DASHBOARD =====================
-window.onload = async () => {
+window.addEventListener('load', async () => {
     if (!window.location.pathname.includes('dashboard.html')) return;
 
     const userId  = localStorage.getItem('user_id');
@@ -140,7 +145,7 @@ window.onload = async () => {
 
     if (!userId || !lastEmp) {
         alert("ไม่พบข้อมูลพนักงาน");
-        window.location.href = "index.html";
+        window.location.href = "signin.html";
         return;
     }
 
@@ -156,7 +161,6 @@ window.onload = async () => {
         const checkout  = data.checkout || "-";
         const workdate  = data.workdate ? new Date(data.workdate).toLocaleDateString('th-TH') : "-";
 
-        // ✅ ดึงจาก DB ตรงๆ ไม่คำนวณเอง
         const otHours  = Number(data.ot_hours)  || 0;
         const totalPay = Number(data.total_pay) || 0;
 
@@ -172,7 +176,6 @@ window.onload = async () => {
         document.getElementById('d-ot').value              = otHours.toFixed(2) + " ชม.";
         document.getElementById('d-salary').value          = totalPay.toLocaleString('th-TH') + " บาท";
 
-        // load profile image
         const profileRes   = await axios.get(`${BASE_URL}/auth/profile/${userId}`);
         const profileImgEl = document.getElementById('profileImg');
         profileImgEl.src   = profileRes.data.profile_image
@@ -182,25 +185,27 @@ window.onload = async () => {
     } catch (err) {
         console.error("Dashboard Error:", err);
     }
-};
+});
 
 // ===================== MONTHLY REPORT =====================
 async function loadReport() {
     const userId = localStorage.getItem('user_id');
     const month  = document.getElementById('monthPicker').value;
 
-    if (!month) { alert("กรุณาเลือกเดือน"); return; }
-    if (!userId) { alert("กรุณา Login ก่อน"); return; }
+    if (!month) {
+        Swal.fire({ icon: "warning", title: "กรุณาเลือกเดือน" });
+        return;
+    }
+    if (!userId) {
+        Swal.fire({ icon: "error", title: "กรุณา Login ก่อน" });
+        return;
+    }
 
     try {
         const res  = await axios.get(`${BASE_URL}/EmployeeForm/monthly/${userId}/${month}`);
         const data = res.data.data;
 
-        let html       = "";
-        let totalOT    = 0;
-        let totalOTPay = 0;
-        let baseSalary = 0;
-
+        let html = "", totalOT = 0, totalOTPay = 0, baseSalary = 0;
         const salaryMap = { HR: 19000, IT: 22000, Sale: 17000, Marketing: 15000 };
 
         data.forEach((row, i) => {
@@ -244,7 +249,7 @@ function goToMonthly() {
 }
 
 // ===================== LOGOUT =====================
-const handleLogout = () => {
+function handleLogout() {
     localStorage.clear();
     window.location.href = "index.html";
-};
+}

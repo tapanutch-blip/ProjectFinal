@@ -65,67 +65,48 @@ const loadUser = async (id) => {
 const submitData = async () => {
 
     let firstnameDOM = document.querySelector('[name=firstname]');
-    let lastnameDOM = document.querySelector('[name=lastname]');
-    let deptDOM = document.querySelector('[name=dept]');
-    let checkinDOM = document.querySelector('[name=checkin]');
-    let checkoutDOM = document.querySelector('[name=checkout]');
-    let workdateDOM = document.querySelector('[name=workdate]');
+    let lastnameDOM  = document.querySelector('[name=lastname]');
+    let deptDOM      = document.querySelector('[name=dept]');
+    let checkinDOM   = document.querySelector('[name=checkin]');
+    let checkoutDOM  = document.querySelector('[name=checkout]');
+    let workdateDOM  = document.querySelector('[name=workdate]');
 
     try {
+        const storedUserId = localStorage.getItem('user_id'); // ✅ เพิ่ม
 
-    let userData = {
-        firstname: firstnameDOM.value,
-        lastname: lastnameDOM.value,
-        workdate: workdateDOM.value,
-        dept: deptDOM.value,
-        checkin: checkinDOM.value,
-        checkout: checkoutDOM.value
-};  
+        let userData = {
+            user_id:   parseInt(storedUserId),               // ✅ เพิ่ม
+            firstname: firstnameDOM.value,
+            lastname:  lastnameDOM.value,
+            workdate:  workdateDOM.value,
+            dept:      deptDOM.value,
+            checkin:   checkinDOM.value,
+            checkout:  checkoutDOM.value
+        };
+
         const errors = validateData(userData);
-
         if (errors.length > 0) {
-            throw {
-                message: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-                errors: errors
-            };
+            throw { message: 'กรุณากรอกข้อมูลให้ครบถ้วน', errors };
         }
 
         if (mode === 'CREATE') {
-
             const response = await axios.post(`${BASE_URL}/EmployeeForm`, userData);
-
-            localStorage.setItem('lastEmployee', response.data.id);
-
+            localStorage.setItem('lastEmployee', response.data.id || response.data.insertId); // ✅ แก้
             window.location.href = "dashboard.html";
-
         } else {
-
             await axios.put(`${BASE_URL}/EmployeeForm/${selectedID}`, userData);
-
             window.location.href = "dashboard.html";
-
         }
 
     } catch (error) {
-
         console.log(error);
-
         let htmlData = `<div>${error.message}</div>`;
-
         if (error.errors) {
-
             htmlData += '<ul>';
-
-            error.errors.forEach(err => {
-                htmlData += `<li>${err}</li>`;
-            });
-
+            error.errors.forEach(err => { htmlData += `<li>${err}</li>`; });
             htmlData += '</ul>';
         }
-
         messageDOM.innerHTML = htmlData;
         messageDOM.className = 'message danger';
     }
-
-
 };
